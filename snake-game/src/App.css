@@ -1,0 +1,74 @@
+body {
+  background-color: #1c001e; /* Morado oscuro casi negro */
+  font-family: 'Press Start 2P', cursive;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  overflow: auto; /* Permitir scroll si es necesario */
+}
+
+h1 {
+  font-size: 24px;
+  color: #D8BFD8; /* Morado claro */
+  text-shadow: 2px 2px #f70071; /* Rosado claro */
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 20px;
+  color: #FF6347; /* Color tomate */
+  text-shadow: 2px 2px #000000; /* Sombra negra */
+}
+
+button {
+  background-color: #D8BFD8; /* Mismo color que el título */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  font-family: 'Press Start 2P', cursive;
+}
+
+button:hover {
+  background-color: #f70071; /* Rosado claro al pasar el cursor */
+}
+
+/* El área de juego */
+.game-board {
+  width: 80vw; /* Ocupa el 80% del ancho de la pantalla */
+  height: 80vw; /* Mantiene un área cuadrada (relación 1:1) */
+  max-width: 500px; /* Máximo tamaño para pantallas grandes */
+  max-height: 500px;
+  background-color: black;
+  position: relative;
+  border: 5px solid #D8BFD8; /* Borde morado claro */
+  margin: 0 auto; /* Centramos el tablero */
+}
+
+/* Segmentos de la serpiente */
+.snake-segment {
+  background-color: #228B22;
+  border: 1px solid #006400;
+  width: calc(80vw / 25); /* Tamaño proporcional al área de juego */
+  height: calc(80vw / 25);
+  max-width: 20px; /* Máximo tamaño en pantallas grandes */
+  max-height: 20px;
+  position: absolute;
+}
+
+/* Manzana */
+.apple {
+  width: calc(80vw / 25); /* Tamaño proporcional al área de juego */
+  height: calc(80vw / 25);
+  max-width: 20px; /* Tamaño máximo en pantallas grandes */
+  max-height: 20px;
+  border-radius: 50%;
+  background-size: cover;
+  position: absolute;
+}
