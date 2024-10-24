@@ -6,7 +6,7 @@ Se puede apreciar que al darle al boton de iniciar el juego este empieza y termi
 
 En caso de que que quieras empezar a jugar otra vez le tendras que dar de nuevo al boton de iniciar partida.
 
-Cabe destacar que para juegar este juefgo se usa las flechas del teclado.
+Cabe destacar que para juegar este juego se debe usar las flechas del teclado.
 
 Si quieres probar el juego desde la web ingresa [aqui](https://admirable-mousse-027031.netlify.app)
  
