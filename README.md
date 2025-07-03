@@ -1,12 +1,12 @@
 # Juego de Snake
 
-En este codigo se puede ver como se reliza el juego de snake en el codigo fuente
+Este código fuente implementa el clásico juego de Snake.
 
-Se puede apreciar que al darle al boton de iniciar el juego este empieza y termina una vez que se pìerda la partida. 
+Al presionar el botón de inicio, la partida comienza y se mantiene activa hasta que el jugador pierde.
 
-En caso de que que quieras empezar a jugar otra vez le tendras que dar de nuevo al boton de iniciar partida.
+Para iniciar una nueva partida, es necesario pulsar nuevamente el botón de inicio.
 
-Cabe destacar que para juegar este juego se debe usar las flechas del teclado.
+Es importante destacar que el control del juego se realiza mediante las teclas de flecha del teclado.
 
 Si quieres probar el juego desde la web ingresa [aqui](https://admirable-mousse-027031.netlify.app)
  
