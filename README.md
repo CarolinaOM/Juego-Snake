@@ -10,4 +10,6 @@ Es importante destacar que el control del juego se realiza mediante las teclas d
 
 Si quieres probar el juego desde la web ingresa [aqui](https://admirable-mousse-027031.netlify.app)
  
-![snake](https://github.com/user-attachments/assets/ec7e749d-ef87-4a3f-ae1f-09d41ab3ea08)
+![snake](src/assets/Juego-snake.gif)
+
+
