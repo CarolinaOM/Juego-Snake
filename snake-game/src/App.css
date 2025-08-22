@@ -1,5 +1,6 @@
+/* Fondo general y tipografía */
 body {
-  background-color: #1c001e; /* Morado oscuro casi negro */
+  background-color: #0b0010; /* Fondo más profundo */
   font-family: 'Press Start 2P', cursive;
   color: white;
   display: flex;
@@ -7,68 +8,155 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
-  overflow: auto; /* Permitir scroll si es necesario */
+  overflow: hidden;
 }
 
+/* Contenedor principal del juego */
+.game-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+/* Título centrado */
+.title-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Estilo del título */
 h1 {
   font-size: 24px;
-  color: #D8BFD8; /* Morado claro */
-  text-shadow: 2px 2px #f70071; /* Rosado claro */
-  margin-bottom: 20px;
+  color: #ff00cc; /* Magenta neón */
+  text-shadow: 0 0 8px #00ffe7;
+  margin-bottom: 10px;
 }
 
+/* Mensaje de Game Over */
 h2 {
   font-size: 20px;
-  color: #FF6347; /* Color tomate */
-  text-shadow: 2px 2px #000000; /* Sombra negra */
+  color: #ff4d4d; /* Rojo neón */
+  text-shadow: 0 0 6px #000000;
+  margin: 0;
 }
 
+/* Contador de puntos */
+.score {
+  font-size: 18px;
+  color: #00ff99; /* Verde menta neón */
+  text-shadow: 0 0 4px #000;
+}
+
+/* Botón de inicio */
 button {
-  background-color: #D8BFD8; /* Mismo color que el título */
+  background-color: #ff00cc;
   color: white;
   border: none;
   padding: 10px 20px;
   font-size: 14px;
   cursor: pointer;
-  margin-bottom: 20px;
   border-radius: 10px;
   font-family: 'Press Start 2P', cursive;
+  box-shadow: 0 0 10px #00ffe7;
 }
 
 button:hover {
-  background-color: #f70071; /* Rosado claro al pasar el cursor */
+  background-color: #00ffe7;
+  color: #0b0010;
 }
 
-/* El área de juego */
+/* Área de juego */
 .game-board {
-  width: 80vw; /* Ocupa el 80% del ancho de la pantalla */
-  height: 80vw; /* Mantiene un área cuadrada (relación 1:1) */
-  max-width: 500px; /* Máximo tamaño para pantallas grandes */
-  max-height: 500px;
-  background-color: black;
+  background: radial-gradient(circle at center, #000000 60%, #0b0010 100%);
+  border: 5px solid #00ffe7;
+  box-shadow: inset 0 0 10px #00ffe7, 0 0 15px #ff00cc;
+  width: calc(25 * 12px);
+  height: calc(25 * 12px);
   position: relative;
-  border: 5px solid #D8BFD8; /* Borde morado claro */
-  margin: 0 auto; /* Centramos el tablero */
+  margin: auto;
+  overflow: hidden;
 }
 
 /* Segmentos de la serpiente */
 .snake-segment {
-  background-color: #228B22;
-  border: 1px solid #006400;
-  width: calc(80vw / 25); /* Tamaño proporcional al área de juego */
-  height: calc(80vw / 25);
-  max-width: 20px; /* Máximo tamaño en pantallas grandes */
-  max-height: 20px;
+  background-color: #00ff00; /* Verde neón */
+  border: 1px solid #009900;
   position: absolute;
+  transition: left 0.1s linear, top 0.1s linear;
+  animation: pulse 0.6s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
 /* Manzana */
 .apple {
-  width: calc(80vw / 25); /* Tamaño proporcional al área de juego */
-  height: calc(80vw / 25);
-  max-width: 20px; /* Tamaño máximo en pantallas grandes */
-  max-height: 20px;
   border-radius: 50%;
-  background-size: cover;
   position: absolute;
+  animation: pop 0.3s ease-out, glow 1.5s infinite alternate;
+  box-shadow: 0 0 8px #ff0000;
+  border: 2px solid white;
+  background-color: #ff1a1a;
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 5px #ff0000; }
+  to { box-shadow: 0 0 15px #ff4d4d; }
+}
+
+@keyframes pop {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Instrucciones animadas */
+.intro p {
+  animation: fadeIn 1s ease forwards;
+  opacity: 0;
+  color: #ffffff;
+  text-shadow: 0 0 6px #00ffe7;
+}
+
+.intro p:nth-child(1) { animation-delay: 0.5s; }
+.intro p:nth-child(2) { animation-delay: 1s; }
+
+@keyframes fadeIn {
+  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+/* Barra de progreso */
+.progress-bar {
+  height: 5px;
+  background-color: #00ff99;
+  box-shadow: 0 0 6px #00ff99;
+  transition: width 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+  .game-board {
+    width: 240px;
+    height: 240px;
+  }
+
+  h1, h2, .score {
+    font-size: 14px;
+  }
+
+  button {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
 }

@@ -1,46 +1,75 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect, useRef } from 'react';
 import './App.css';
 
-const CANVAS_SIZE = { width: 500, height: 500 };
+const GRID_SIZE = 25;
 const SNAKE_START = [{ x: 8, y: 8 }];
 const APPLE_START = { x: 10, y: 10 };
-const SCALE = 20;
-const SPEED = 200;  // Velocidad inicial
-const MIN_SPEED = 50;  // Velocidad mínima permitida
+const SPEED = 200;
+const MIN_SPEED = 50;
 const DIRECTIONS = {
-  38: { x: 0, y: -1 }, // Arriba
-  40: { x: 0, y: 1 },  // Abajo
-  37: { x: -1, y: 0 }, // Izquierda
-  39: { x: 1, y: 0 }   // Derecha
+  38: { x: 0, y: -1 },
+  40: { x: 0, y: 1 },
+  37: { x: -1, y: 0 },
+  39: { x: 1, y: 0 }
 };
 
 function App() {
+  const boardRef = useRef(null);
+  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [snake, setSnake] = useState(SNAKE_START);
   const [apple, setApple] = useState(APPLE_START);
   const [direction, setDirection] = useState({ x: 1, y: 0 });
   const [speed, setSpeed] = useState(null);
   const [gameOver, setGameOver] = useState(false);
+  const [score, setScore] = useState(0);
 
-  // Movimiento de la serpiente
+  //const SCALE = canvasSize.width > 0 ? Math.max(canvasSize.width / GRID_SIZE, 8) : 20;
+  const SCALE = canvasSize.width > 0 && canvasSize.height > 0
+  ? Math.max(
+      Math.min(
+        Math.floor(canvasSize.width / GRID_SIZE),
+        Math.floor(canvasSize.height / GRID_SIZE)
+      ),
+      10 // 👈 tamaño mínimo por celda
+    )
+  : 12;
+
+
+
+  useLayoutEffect(() => {
+    if (boardRef.current) {
+      const size = boardRef.current.getBoundingClientRect();
+      setCanvasSize({ width: size.width, height: size.height });
+    }
+  }, []);
+
   const moveSnake = ({ keyCode }) => {
     if (DIRECTIONS[keyCode]) {
       setDirection(DIRECTIONS[keyCode]);
     }
   };
 
-  const createApple = () => {
-    return {
-      x: Math.floor(Math.random() * CANVAS_SIZE.width / SCALE),
-      y: Math.floor(Math.random() * CANVAS_SIZE.height / SCALE)
+  const createApple = (snakeBody) => {
+    let newApple = {
+      x: Math.floor(Math.random() * (GRID_SIZE - 2)) + 1,
+      y: Math.floor(Math.random() * (GRID_SIZE - 2)) + 1
     };
+    let attempts = 0;
+    while (checkCollision(newApple, snakeBody) && attempts < 100) {
+      newApple = {
+        x: Math.floor(Math.random() * (GRID_SIZE - 2)) + 1,
+        y: Math.floor(Math.random() * (GRID_SIZE - 2)) + 1
+      };
+      attempts++;
+    }
+    return newApple;
   };
+
 
   const checkCollision = (piece, snk = snake) => {
     if (
-      piece.x * SCALE >= CANVAS_SIZE.width || 
-      piece.x < 0 || 
-      piece.y * SCALE >= CANVAS_SIZE.height || 
-      piece.y < 0
+      piece.x < 0 || piece.x >= GRID_SIZE ||
+      piece.y < 0 || piece.y >= GRID_SIZE
     ) return true;
     for (const segment of snk) {
       if (piece.x === segment.x && piece.y === segment.y) return true;
@@ -50,14 +79,10 @@ function App() {
 
   const checkAppleCollision = (newSnake) => {
     if (newSnake[0].x === apple.x && newSnake[0].y === apple.y) {
-      let newApple = createApple();
-      while (checkCollision(newApple, newSnake)) {
-        newApple = createApple();
-      }
+      const newApple = createApple(newSnake);
       setApple(newApple);
-
-      // Aumentar la velocidad si es mayor a la velocidad mínima
-      setSpeed((prevSpeed) => (prevSpeed > MIN_SPEED ? prevSpeed - 10 : prevSpeed)); 
+      setScore((prevScore) => prevScore + 1);
+      setSpeed((prevSpeed) => (prevSpeed > MIN_SPEED ? prevSpeed - 10 : prevSpeed));
       return true;
     }
     return false;
@@ -65,12 +90,12 @@ function App() {
 
   const gameLoop = () => {
     const snakeCopy = JSON.parse(JSON.stringify(snake));
-    const newSnakeHead = {
+    const newHead = {
       x: snakeCopy[0].x + direction.x,
       y: snakeCopy[0].y + direction.y
     };
-    snakeCopy.unshift(newSnakeHead);
-    if (checkCollision(newSnakeHead)) {
+    snakeCopy.unshift(newHead);
+    if (checkCollision(newHead)) {
       setSpeed(null);
       setGameOver(true);
       return;
@@ -81,7 +106,7 @@ function App() {
     setSnake(snakeCopy);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (speed !== null) {
       const interval = setInterval(() => gameLoop(), speed);
       return () => clearInterval(interval);
@@ -92,50 +117,63 @@ function App() {
     setSnake(SNAKE_START);
     setApple(APPLE_START);
     setDirection({ x: 1, y: 0 });
-    setSpeed(SPEED);  // Reiniciar la velocidad al valor inicial
+    setSpeed(SPEED);
     setGameOver(false);
+    setScore(0);
   };
 
   return (
     <div role="button" tabIndex="0" onKeyDown={moveSnake} className="game-area">
-      <h1>🐍 Juego de la Serpiente 🐍</h1>
+      <div className="title-container">
+        <h1>🐍 Juego de la Serpiente 🐍</h1>
+      </div>
+
+      {!speed && !gameOver && (
+        <div className="intro">
+          <p>🕹️ Usa las flechas para moverte</p>
+          <p>🍎 Come manzanas para ganar puntos</p>
+        </div>
+      )}
+
       {gameOver && <h2>💀 ¡Juego Terminado! 💀</h2>}
+
       <button onClick={startGame}>Iniciar Juego</button>
+      <h2 className="score">Puntos: {score}</h2>
+
       <div
-        className="game-board"
+        className="progress-bar"
         style={{
-          width: CANVAS_SIZE.width,
-          height: CANVAS_SIZE.height,
-          backgroundColor: 'black',
-          position: 'relative'
+          width: `${Math.min(score * 4, 100)}%`
         }}
-      >
-        {snake.map((segment, index) => (
-          <div
-            key={index}
-            className="snake-segment"
+      ></div>
+
+      <div ref={boardRef} className="game-board">
+        {canvasSize.width > 0 && (
+          <>
+            {snake.map((segment, index) => (
+              <div
+                key={index}
+                className="snake-segment"
+                style={{
+                  left: `${segment.x * SCALE}px`,
+                  top: `${segment.y * SCALE}px`,
+                  width: `${SCALE}px`,
+                  height: `${SCALE}px`
+                }}
+              />
+            ))}
+            <div
+            className="apple"
             style={{
-              left: `${segment.x * SCALE}px`,
-              top: `${segment.y * SCALE}px`,
-              width: `${SCALE}px`,
-              height: `${SCALE}px`,
-              backgroundColor: 'lime',
-              position: 'absolute'
+              left: `${apple.x * SCALE + SCALE * 0.05}px`,
+              top: `${apple.y * SCALE + SCALE * 0.05}px`,
+              width: `${SCALE * 0.9}px`,
+              height: `${SCALE * 0.9}px`
             }}
           />
-        ))}
-        <div
-          className="apple"
-          style={{
-            left: `${apple.x * SCALE}px`,
-            top: `${apple.y * SCALE}px`,
-            width: `${SCALE}px`,
-            height: `${SCALE}px`,
-            backgroundImage: 'url(/apple.png)', // Reemplaza el color con la imagen
-            backgroundSize: 'cover',            // Asegura que la imagen cubra el área del div
-            position: 'absolute'
-          }}
-        />
+
+          </>
+        )}
       </div>
     </div>
   );
