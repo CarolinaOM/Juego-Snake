@@ -9,7 +9,8 @@ Para iniciar una nueva partida, es necesario pulsar nuevamente el botón de inic
 Es importante destacar que el control del juego se realiza mediante las teclas de flecha del teclado.
 
 Si quieres probar el juego desde la web ingresa [aqui](https://admirable-mousse-027031.netlify.app)
- 
+
 ![snake](src/assets/Juego-snake.gif)
+
 
 
